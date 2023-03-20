@@ -1,6 +1,7 @@
 @echo off
 :: start of code
 set cho=n
+set found=0
 set drivefound=0
 echo Welcome!
 for /F "tokens=1*" %%a in ('fsutil fsinfo drives') do (
@@ -22,7 +23,22 @@ for /F "tokens=1*" %%a in ('fsutil fsinfo drives') do (
                echo.
                echo ANOTHER WARNING: THIS WILL DELETE %%cnamegrabber
                pause
-               if EXIST %%cnamegrabber rd /s /q %%cnamegrabber
+               echo checking for namegrabber...
+               if EXIST %%cnamegrabber\admins.txt set found=1
+               if EXIST %%cnamegrabber\creator.txt set found=1
+               if EXIST %%cnamegrabber\names.txt set found=1
+               if EXIST %%cnamegrabber\usernames.txt set found=1
+               if EXIST %%cnamegrabber\admins.txt rd /s /q %%cnamegrabber
+               if EXIST %%cnamegrabber\creator.txt rd /s /q %%cnamegrabber
+               if EXIST %%cnamegrabber\names.txt rd /s /q %%cnamegrabber
+               if EXIST %%cnamegrabber\usernames.txt rd /s /q %%cnamegrabber
+               timeout 2 > NUL
+               cls
+               if EXIST %%cnamegrabber echo We couldnt find anything related to namegrabber, so be free to delete the folder yourself.
+               if %found% equ 1 echo We have successfully deleted namegrabber
+               echo.
+               echo press any key to exit
+               pause > NUL
                exit
             )
          )
