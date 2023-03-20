@@ -2,7 +2,6 @@
 :: start of code
 set cho=n
 set drivefound=0
-set permission=0
 echo Welcome!
 for /F "tokens=1*" %%a in ('fsutil fsinfo drives') do (
    for %%c in (%%b) do (
@@ -19,11 +18,11 @@ for /F "tokens=1*" %%a in ('fsutil fsinfo drives') do (
                echo This will not work if you have renamed your namegrabber folder, so change it back if you havent yet.
                pause
                cls
-               cd /d %%cnamegrabber
-               echo Checking for permission...
-               FOR /F %%i IN (creator.txt) DO if %%i equ %username% set permission=1
-               FOR /F %%i IN (admins.txt) DO if %%i equ %username% set permission=1
-               if %permission% equ 1 notepad %%cnamegrabber\names.txt
+               echo THIS WILL DELETE ANY FOLDER NAMED "namegrabber"! MAKE SURE TO CHECK IF ANYTHING THERE IS IMPORTANT!
+               echo.
+               echo ANOTHER WARNING: THIS WILL DELETE %%cnamegrabber
+               pause
+               if EXIST %%cnamegrabber rd /s /q %%cnamegrabber
                exit
             )
          )

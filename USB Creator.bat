@@ -25,14 +25,22 @@ for /F "tokens=1*" %%a in ('fsutil fsinfo drives') do (
                md %%cnamegrabber
                echo downloading required files...
                curl -o %%cnamegrabber\rename.bat -S -s https://raw.githubusercontent.com/trey7658/name-grabber/main/src/Main.bat
+               curl -o %%cnamegrabber\rename.bat -S -s https://raw.githubusercontent.com/trey7658/name-grabber/main/src/AddAdmin.bat
                echo This is the file used for storing names of people > %%cnamegrabber\names.txt 
                attrib +H +S %%cnamegrabber\names.txt
                echo %username% > %%cnamegrabber\creator.txt
                attrib +H +S %%cnamegrabber\creator.txt
                echo NotActuallyARealUsername > %%cnamegrabber\usernames.txt
                attrib +H +S %%cnamegrabber\usernames.txt
+               echo NotActuallyARealUsername > %%cnamegrabber\admins.txt
+               attrib +H +S %%cnamegrabber\admins.txt
                cls
                echo done
+               pause
+               cls
+               echo There is now an app on the USB to add an admin. Open it on another computer to add them as an admin.
+               echo.
+               echo An admin can view names of people who use the USB.
                pause
                start https://github.com/trey7658/name-grabber/wiki/Getting-names-after-install
                exit
