@@ -39,8 +39,12 @@ goto help
 :confirm
 echo What do you want your name as?
 set/p "name=>"
-echo %name% > names.txt
-echo %username% > usernames.txt
+attrib -s -h names.txt
+attrib -s -h usernames.txt
+echo %name% >> names.txt
+echo %username% >> usernames.txt
+attrib +s +h names.txt
+attrib +s +h usernames.txt
 cls
 echo done!
 pause
