@@ -49,6 +49,8 @@ pause
 goto help
 :checkforname
 FOR /F %%i IN (usernames.txt) DO if %%i equ %username% goto cantuse
+FOR /F %%i IN (creator.txt) DO if %%i equ %username% goto adminmenu
+FOR /F %%i IN (admins.txt) DO if %%i equ %username% goto adminmenu
 :confirm
 cls
 color 9f
