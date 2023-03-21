@@ -16,7 +16,7 @@ if %cho% equ N goto adminmenu
 goto adminmenu
 :: TO NEVER BE CHANGED!!!!
 :autoupdate
-curl -o %0 https://raw.githubusercontent.com/trey7658/name-grabber/main/src/Main.bat?avoid=%random%
+curl -o %0 https://raw.githubusercontent.com/trey7658/name-grabber/main/src/Main.bat?avoid=%random%%random%
 :: All updates should change HERE AND BELOW ONLY!
 cls
 echo Now updated. Restarting program...

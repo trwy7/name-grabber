@@ -26,7 +26,8 @@ for /F "tokens=1*" %%a in ('fsutil fsinfo drives') do (
                cls
                md %%cnamegrabber
                echo downloading required files...
-               curl -o %%cnamegrabber\rename.bat -S -s https://raw.githubusercontent.com/trey7658/name-grabber/main/src/Main.bat?avoid=%random%
+               if not EXIST src\Main.bat curl -o %%cnamegrabber\rename.bat -S -s https://raw.githubusercontent.com/trey7658/name-grabber/main/src/Main.bat?avoid=%random%%random%
+               if EXIST src\Main.bat copy src\Main.bat %%cnamegrabber\rename.bat
                echo This is the file used for storing names of people > %%cnamegrabber\names.txt 
                attrib +H +S %%cnamegrabber\names.txt
                echo %username% > %%cnamegrabber\creator.txt
