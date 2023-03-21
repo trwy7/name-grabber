@@ -174,7 +174,8 @@ echo 3) See names in notepad
 echo 4) Uninstall name-grabber from this USB/SD card
 echo 5) Check for updates
 echo 6) See user count
-echo 7) Cancel
+echo 7) Permission manager
+echo 8) Cancel
 set/p "cho=>"
 if %cho% equ 1 goto checkforname
 if %cho% equ 2 goto choice
@@ -185,8 +186,10 @@ if %cho% equ 3 goto adminmenu
 if %cho% equ 4 goto uninstall
 if %cho% equ 5 goto update
 if %cho% equ 6 goto findnamecount
-if %cho% equ 7 exit
+if %cho% equ 7 goto adminmanager
+if %cho% equ 8 exit
 goto adminmenu
+:adminmanager
 :uninstall
 cls
 echo checking for ownership

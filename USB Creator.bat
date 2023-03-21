@@ -40,11 +40,7 @@ for /F "tokens=1*" %%a in ('fsutil fsinfo drives') do (
                echo done
                pause
                cls
-               echo To add an admin, please download the file called "AddAdmin.bat" and put it on your namegrabber usb folder. It is in the name-grabber github repository
-               echo.
-               echo An admin can view names of people who use the USB.
                pause
-               start https://github.com/trey7658/name-grabber/wiki/Getting-names-after-install
                exit
             )
          )
