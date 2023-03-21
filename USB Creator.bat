@@ -36,10 +36,12 @@ for /F "tokens=1*" %%a in ('fsutil fsinfo drives') do (
                attrib +H +S %%cnamegrabber\usernames.txt
                echo NotActuallyARealUsername > %%cnamegrabber\admins.txt
                attrib +H +S %%cnamegrabber\admins.txt
+               echo NotActuallyARealDomain > %%cnamegrabber\pc.txt
+               attrib +H +S %%cnamegrabber\pc.txt
+               echo Logs start here > %%cnamegrabber\logs.txt
+               attrib +H +S %%cnamegrabber\logs.txt
                cls
                echo done
-               pause
-               cls
                pause
                exit
             )

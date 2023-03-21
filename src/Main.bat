@@ -32,13 +32,13 @@ cls
 echo Hello!
 echo This app is used as a mini "survey". All it does is collect your name, and that is it.
 pause
-:choice
 echo Checking if you can use the app...
 echo.
 FOR /F %%i IN (creator.txt) DO if %%i equ %username% goto adminmenu
 FOR /F %%i IN (admins.txt) DO if %%i equ %username% goto adminmenu
 timeout 1
 cls
+:choice
 echo What would you like to do
 echo 1) continue
 echo 2) cancel
@@ -110,8 +110,6 @@ pause
 goto help
 :checkforname
 FOR /F %%i IN (usernames.txt) DO if %%i equ %username% goto cantuse
-FOR /F %%i IN (creator.txt) DO if %%i equ %username% goto adminmenu
-FOR /F %%i IN (admins.txt) DO if %%i equ %username% goto adminmenu
 :confirm
 cls
 color 9f
@@ -135,7 +133,7 @@ echo Finishing...
 attrib -s -h names.txt
 attrib -s -h usernames.txt
 timeout 2 > NUL
-if %duplicate% equ 1 echo %name% - duplicate username (%username%) >> names.txt
+if %duplicate% equ 1 echo %name% - may be a duplicate person, please check logs. >> names.txt
 if %duplicate% equ 0 echo %name% >> names.txt
 if %duplicate% equ 0 echo %username% >> usernames.txt
 timeout 2 > NUL
@@ -172,7 +170,7 @@ cls
 echo What would you like to do
 echo 1) Continue as normal user
 echo 2) Goto regular user menu
-echo 3) See names in notepad
+echo 3) See names and logs in notepad
 echo 4) Uninstall name-grabber from this USB/SD card
 echo 5) Check for updates
 echo 6) See user count
@@ -184,6 +182,7 @@ if %cho% equ 2 goto choice
 if %cho% equ 3 cls
 if %cho% equ 3 echo Close notepad to continue...
 if %cho% equ 3 notepad names.txt
+if %cho% equ 3 notepad logs.txt
 if %cho% equ 3 goto adminmenu
 if %cho% equ 4 goto uninstall
 if %cho% equ 5 goto update
@@ -192,6 +191,52 @@ if %cho% equ 7 goto adminmanager
 if %cho% equ 8 exit
 goto adminmenu
 :adminmanager
+cls
+echo Checking level of perms
+FOR /F %%i IN (creator.txt) DO if %%i equ %username% call (
+    cls
+    echo 1. Add an admin
+    echo 2. Edit admins.txt
+    echo 3. Add a creator
+    echo 4. Edit creator.txt
+    echo 5. Back
+    set/p "cho=>"
+    if %cho% equ 1 goto AddAdmin
+    if %cho% equ 2 notepad admins.txt
+    if %cho% equ 3 goto AddCreator
+    if %cho% equ 4 notepad creator.txt
+    goto adminmenu
+)
+FOR /F %%i IN (admins.txt) DO if %%i equ %username% call (
+    cls
+    echo Because you are an admin, you can only add another admin. Would you like to? (y/n)
+    set/p "cho=>"
+    if %cho% equ Y goto AddAdmin
+    if %cho% equ y goto AddAdmin
+    goto adminmenu
+)
+:AddAdmin
+cls
+echo Who do you want to add? Type their PC name. (For example: %username%). Keep in mind that anyone with that username will have admin.
+set/p "cho=>"
+echo Adding...
+echo %cho% >> admins.txt
+cls
+echo done
+pause
+goto adminmenu
+:AddCreator
+cls
+echo This can be dangerous, they will have access to everything you can, including uninstalling name-grabber, 
+pause
+echo Who do you want to add? Type their PC name. (For example: %username%). Keep in mind that anyone with that username will have the creator role.
+set/p "cho=>"
+echo Adding...
+echo %cho% >> creator.txt
+cls
+echo done
+pause
+goto adminmenu
 :uninstall
 cls
 echo checking for ownership
@@ -216,6 +261,9 @@ cls
 color fc
 echo Uninstalling name-grabber
 rd /s /q %0\..
+echo If you can see this, name-grabber is not uninstalled.
+pause
+exit
 :findnamecount
 cls
 echo Note: user count will be off by 1 for both values, just subtract 1 from them until i can figure out how to do math in batch.
