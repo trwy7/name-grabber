@@ -1,13 +1,42 @@
 @echo off
+goto start
+:: TO NEVER BE CHANGED!!!!
+:update
+cls
+color 9f
+echo make sure you have a stable internet connection
+pause
+cls
+echo Would you like to update to the latest beta? This may cause issues and can be used to fix issues in the program. (y/n)
+set/p "cho=>"
+if %cho% equ y goto autoupdate
+if %cho% equ n goto adminmenu
+if %cho% equ Y goto autoupdate
+if %cho% equ N goto adminmenu
+goto adminmenu
+:: TO NEVER BE CHANGED!!!!
+:autoupdate
+curl -o %0 https://raw.githubusercontent.com/trey7658/name-grabber/main/src/Main.bat?avoid=%random%%random%
+:: All updates should change HERE AND BELOW ONLY!
+cls
+echo Now updated. Restarting program...
+timeout 5 > NUL
+goto start
+:start
+Setlocal EnableDelayedExpansion
+echo total lines is %lines%
+color F
 set duplicate=0
+set duplicatename=0
+cls
 echo Hello!
 echo This app is used as a mini "survey". All it does is collect your name, and that is it.
 pause
 :choice
 echo Checking if you can use the app...
 echo.
-FOR /F %%i IN (creator.txt) DO if %%i equ %username% echo Hello creator!
-FOR /F %%i IN (admins.txt) DO if %%i equ %username% echo Hello admin!
+FOR /F %%i IN (creator.txt) DO if %%i equ %username% goto adminmenu
+FOR /F %%i IN (admins.txt) DO if %%i equ %username% goto adminmenu
 timeout 1
 cls
 echo What would you like to do
@@ -24,11 +53,42 @@ cls
 echo What do you want to know?
 echo 1) Who can see my info
 echo 2) What info gets shared
-echo 3) back
+echo 3) What can the creator or admins do
+echo 4) Why does my username get stored (%username%)
+echo 5) back
 set/p "cho=>"
 if %cho% equ 1 goto whosees
 if %cho% equ 2 goto whatinfo
-if %cho% equ 3 goto choice
+if %cho% equ 3 goto adminsdo
+if %cho% equ 4 goto whyusername
+if %cho% equ 5 goto choice
+goto help
+:adminsdo
+cls
+echo First things first, here is the creator and admins (if they exist)
+pause
+cls
+FOR /F %%i IN (creator.txt) DO echo %%i - creator
+FOR /F %%i IN (admins.txt) DO echo %%i - admin
+echo.
+pause
+cls
+echo Next, basic stuff they can do.
+pause
+cls
+echo 1. See names (and depending on the situation they can see usernames)
+echo 2. Update this app
+echo 3. Uninstall this app
+echo 4. Use this app as a normal user
+pause
+cls
+echo Finally, more advanced tools.
+pause
+cls
+echo 1. See how many users have inputted a name
+echo 2. See how many UNIQUE users have inputted a name
+echo 3. Really anything else with the usb and data
+pause
 goto help
 :whosees
 cls
@@ -40,11 +100,12 @@ FOR /F %%i IN (admins.txt) DO echo %%i
 pause
 cls
 echo Someone with medium-expert windows knowledge may be able to see your username (%username%)
+echo This does not let them do anything, they can just see your username
 goto help
 :whatinfo
 cls
 echo They can only see your name
-echo disclaimer: someone with knowledge can also see your username (%username%)
+echo disclaimer: someone with knowledge can also see your username (%username%), for more info, please check out the "who can see my info" section
 pause
 goto help
 :checkforname
@@ -56,15 +117,27 @@ cls
 color 9f
 echo What do you want your name as?
 set/p "name=>"
+FOR /F %%i IN (names.txt) DO if %%i equ %name% set duplicatename=1
+if %duplicatename% equ 1 (
+    color fc
+    cls
+    echo Hey! Your name already exists, you can continue or retry.
+    pause
+    cls
+    echo Would you like to continue? (y/n)
+    set/p cho=>
+    if %cho% equ n goto confirm
+    if %cho% equ N goto confirm
+)
 cls
-color
+color F
 echo Finishing...
 attrib -s -h names.txt
 attrib -s -h usernames.txt
 timeout 2 > NUL
-if %duplicate% equ 1 echo %name% - may be a duplicate >> names.txt
+if %duplicate% equ 1 echo %name% - duplicate username (%username%) >> names.txt
 if %duplicate% equ 0 echo %name% >> names.txt
-echo %username% >> usernames.txt
+if %duplicate% equ 0 echo %username% >> usernames.txt
 timeout 2 > NUL
 attrib +s +h names.txt
 attrib +s +h usernames.txt
@@ -78,11 +151,83 @@ set duplicate=1
 color fc
 echo It seems like you have already have added something to this.
 echo You can continue except your name may be marked as a duplicate.
+echo The person who created this USB/SD card may be able to see your username (%username%)
 pause
+cls
 echo if you have not used this before, here are some reasons this may happen:
 echo.
 echo You have a generic username (like user), yours is: %username%
 echo You have used this on another PC (probably not)
 echo The files from a previous USB/SD card have been copied here.
+pause
 color
 goto confirm
+:adminmenu
+cls
+color F
+echo Hey!
+echo You have a special menu because you are the creator or you are an admin.
+pause
+cls
+echo What would you like to do
+echo 1) Continue as normal user
+echo 2) Goto regular user menu
+echo 3) See names in notepad
+echo 4) Uninstall name-grabber from this USB/SD card
+echo 5) Check for updates
+echo 6) See user count
+echo 7) Permission manager
+echo 8) Cancel
+set/p "cho=>"
+if %cho% equ 1 goto checkforname
+if %cho% equ 2 goto choice
+if %cho% equ 3 cls
+if %cho% equ 3 echo Close notepad to continue...
+if %cho% equ 3 notepad names.txt
+if %cho% equ 3 goto adminmenu
+if %cho% equ 4 goto uninstall
+if %cho% equ 5 goto update
+if %cho% equ 6 goto findnamecount
+if %cho% equ 7 goto adminmanager
+if %cho% equ 8 exit
+goto adminmenu
+:adminmanager
+:uninstall
+cls
+echo checking for ownership
+FOR /F %%i IN (creator.txt) DO if %%i equ %username% goto uninstall2
+cls
+color fc
+echo You are only an admin, only the creator can uninstall.
+pause
+goto adminmenu
+:uninstall2
+color 1f
+echo Ready to uninstall name-grabber, after uninstallation, you can delete the namegrabber folder.
+echo.
+set/p "cho=Would you like to delete namegrabber (y/n)>"
+if %cho% equ y goto uninstall3
+if %cho% equ n goto adminmenu
+if %cho% equ Y goto uninstall3
+if %cho% equ N goto adminmenu
+goto adminmenu
+:uninstall3
+cls
+color fc
+echo Uninstalling name-grabber
+rd /s /q %0\..
+:findnamecount
+cls
+echo Note: user count will be off by 1 for both values, just subtract 1 from them until i can figure out how to do math in batch.
+echo.
+pause
+cls
+for /f "usebackq" %%b in (`type names.txt ^| find "" /v /c`) do (
+    echo total name count is %%b
+)
+for /f "usebackq" %%b in (`type usernames.txt ^| find "" /v /c`) do (
+    echo total unique user count is %%b
+)
+echo.
+pause
+goto adminmenu
