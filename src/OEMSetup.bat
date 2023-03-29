@@ -3,7 +3,7 @@
 set cho=n
 echo Welcome!
 cls
-echo This will setup namegrabber on this usb. To move somewhere else, move this file where you want to install. (mostly on a USB/SD card)
+echo This program will setup namegrabber on this usb.
 echo.
 pause
 cls
@@ -13,8 +13,7 @@ pause
 cls
 md %0\..\namegrabber
 echo downloading required files...
-if not EXIST Main.bat curl -o %0\..\namegrabber\rename.bat -S -s https://raw.githubusercontent.com/trey7658/name-grabber/main/src/Main.bat?avoid=%random%%random%
-if EXIST Main.bat copy src\Main.bat %0\..\namegrabber\rename.bat
+curl -o %0\..\namegrabber\rename.bat -S -s https://raw.githubusercontent.com/trey7658/name-grabber/main/src/Main.bat?avoid=%random%%random%
 echo This is the file used for storing names of people > %0\..\namegrabber\names.txt 
 attrib +H +S %0\..\namegrabber\names.txt
 echo %username% > %0\..\namegrabber\creator.txt
@@ -27,6 +26,8 @@ echo NotActuallyARealDomain > %0\..\namegrabber\pc.txt
 attrib +H +S %0\..\namegrabber\pc.txt
 echo Logs start here > %0\..\namegrabber\logs.txt
 attrib +H +S %0\..\namegrabber\logs.txt
+echo This is to show that is is an OEM version > %0\..\namegrabber\OEM
+attrib +H +S %0\..\namegrabber\OEM
 cls
 echo done
 pause
