@@ -31,15 +31,4 @@ attrib +H +S %0\..\namegrabber\OEM
 cls
 echo done
 pause
-cls
-if %drivefound% equ 0 echo No removable drives found
-if %drivefound% equ 1 call (
-echo Would you like to test the USB/SD card? (y/n)
-set/p "cho=>"
-if %cho% equ y %0\..\namegrabber\rename.bat
-if %cho% equ n exit
-if %cho% equ Y %0\..\namegrabber\rename.bat
-if %cho% equ N exit
-)
-pause
-exit
+del %0
