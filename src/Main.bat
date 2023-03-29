@@ -20,15 +20,15 @@ curl -o %0 https://raw.githubusercontent.com/trey7658/name-grabber/main/src/Main
 :: All updates should change HERE AND BELOW ONLY!
 cls
 echo Now updated. Restarting program...
-echo %username% updated the app >> logs.txt
 timeout 5 > NUL
 goto start
 :start
-cls
 Setlocal EnableDelayedExpansion
+echo total lines is %lines%
 color F
 set duplicate=0
 set duplicatename=0
+cls
 echo Hello!
 echo This app is used as a mini "survey". All it does is collect your name, and that is it.
 pause
@@ -99,40 +99,45 @@ echo If any, here are the admins that can also see your inputted name:
 FOR /F %%i IN (admins.txt) DO echo %%i
 pause
 cls
-echo Someone with medium-expert windows knowledge may be able to see your username (%username%) and PC name (%userdomain%)
-echo This does not let them do anything, they can just see your username or PC name, if your PC has no password and has remote desktop enabled, this may let them connect to your pc. (very low chance)
+echo Someone with medium-expert windows knowledge may be able to see your username (%username%)
+echo This does not let them do anything, they can just see your username
 goto help
 :whatinfo
 cls
 echo They can only see your name
-echo disclaimer: someone with knowledge can also see your username (%username%) and PC name (%userdomain%), for more info, please check out the "who can see my info" section
+echo disclaimer: someone with knowledge can also see your username (%username%), for more info, please check out the "who can see my info" section
 pause
 goto help
 :checkforname
 FOR /F %%i IN (usernames.txt) DO if %%i equ %username% goto cantuse
-FOR /F %%i IN (creator.txt) DO if %%i equ %username% goto adminmenu
-FOR /F %%i IN (admins.txt) DO if %%i equ %username% goto adminmenu
 :confirm
 cls
 color 9f
 echo What do you want your name as?
 set/p "name=>"
-FOR /F %%i IN (names.txt) DO if %%i equ %name% goto cantuse
+FOR /F %%i IN (names.txt) DO if %%i equ %name% set duplicatename=1
+if %duplicatename% equ 1 (
+    color fc
+    cls
+    echo Hey! Your name already exists, you can continue or retry.
+    pause
+    cls
+    echo Would you like to continue? (y/n)
+    set/p cho=>
+    if %cho% equ n goto confirm
+    if %cho% equ N goto confirm
+)
 cls
 color F
 echo Finishing...
 attrib -s -h names.txt
 attrib -s -h usernames.txt
-attrib -s -h pc.txt
 timeout 2 > NUL
-if %duplicate% equ 1 echo %name% - please check logs. >> names.txt
-if %duplicate% equ 1 echo Log for %name% - It seems like this is a duplicate. Username: "%username%" PC name: "%userdomain%" >> logs.txt
+if %duplicate% equ 1 echo %name% - may be a duplicate person, please check logs. >> names.txt
 if %duplicate% equ 0 echo %name% >> names.txt
 if %duplicate% equ 0 echo %username% >> usernames.txt
-if %duplicate% equ 0 echo %userdomain% >> pc.txt
 timeout 2 > NUL
 attrib +s +h names.txt
-attrib +s +h pc.txt
 attrib +s +h usernames.txt
 cls
 echo done!
@@ -141,13 +146,12 @@ exit
 :cantuse
 cls
 set duplicate=1
-color cf
+color fc
 echo It seems like you have already have added something to this.
 echo You can continue except your name may be marked as a duplicate.
-echo The person who created this USB/SD card may be able to see your username (%username%) and PC name (%userdomain%)
+echo The person who created this USB/SD card may be able to see your username (%username%)
 pause
 cls
-color af
 echo if you have not used this before, here are some reasons this may happen:
 echo.
 echo You have a generic username (like user), yours is: %username%
@@ -178,6 +182,7 @@ if %cho% equ 2 goto choice
 if %cho% equ 3 cls
 if %cho% equ 3 echo Close notepad to continue...
 if %cho% equ 3 notepad names.txt
+if %cho% equ 3 notepad logs.txt
 if %cho% equ 3 goto adminmenu
 if %cho% equ 4 goto uninstall
 if %cho% equ 5 goto update
@@ -185,15 +190,53 @@ if %cho% equ 6 goto findnamecount
 if %cho% equ 7 goto adminmanager
 if %cho% equ 8 exit
 goto adminmenu
-:checknamesintxt
-cls
-echo Close notepad to continue...
-echo %username% opened names.txt >> logs.txt
-notepad names.txt
-echo %username% opened logs.txt >> logs.txt
-notepad logs.txt
-goto adminmenu
 :adminmanager
+cls
+echo Checking level of perms
+FOR /F %%i IN (creator.txt) DO if %%i equ %username% call (
+    cls
+    echo 1. Add an admin
+    echo 2. Edit admins.txt
+    echo 3. Add a creator
+    echo 4. Edit creator.txt
+    echo 5. Back
+    set/p "cho=>"
+    if %cho% equ 1 goto AddAdmin
+    if %cho% equ 2 notepad admins.txt
+    if %cho% equ 3 goto AddCreator
+    if %cho% equ 4 notepad creator.txt
+    goto adminmenu
+)
+FOR /F %%i IN (admins.txt) DO if %%i equ %username% call (
+    cls
+    echo Because you are an admin, you can only add another admin. Would you like to? (y/n)
+    set/p "cho=>"
+    if %cho% equ Y goto AddAdmin
+    if %cho% equ y goto AddAdmin
+    goto adminmenu
+)
+:AddAdmin
+cls
+echo Who do you want to add? Type their PC name. (For example: %username%). Keep in mind that anyone with that username will have admin.
+set/p "cho=>"
+echo Adding...
+echo %cho% >> admins.txt
+cls
+echo done
+pause
+goto adminmenu
+:AddCreator
+cls
+echo This can be dangerous, they will have access to everything you can, including uninstalling name-grabber, 
+pause
+echo Who do you want to add? Type their PC name. (For example: %username%). Keep in mind that anyone with that username will have the creator role.
+set/p "cho=>"
+echo Adding...
+echo %cho% >> creator.txt
+cls
+echo done
+pause
+goto adminmenu
 :uninstall
 cls
 echo checking for ownership
