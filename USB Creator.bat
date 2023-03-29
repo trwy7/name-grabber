@@ -43,7 +43,6 @@ for /F "tokens=1*" %%a in ('fsutil fsinfo drives') do (
                cls
                echo done
                pause
-               exit
             )
          )
       )
@@ -51,6 +50,13 @@ for /F "tokens=1*" %%a in ('fsutil fsinfo drives') do (
 )
 cls
 if %drivefound% equ 0 echo No removable drives found
-if %drivefound% equ 1 echo No other removable drives found
+if %drivefound% equ 1 call (
+   echo Would you like to test the USB/SD card? (y/n)
+   set/p "cho=>"
+   if %cho% equ y %%cnamegrabber\rename.bat
+   if %cho% equ n exit
+   if %cho% equ Y %%cnamegrabber\rename.bat
+   if %cho% equ N exit
+)
 pause
 exit
