@@ -26,8 +26,8 @@ echo NotActuallyARealDomain > %0\..\namegrabber\pc.txt
 attrib +H +S %0\..\namegrabber\pc.txt
 echo Logs start here > %0\..\namegrabber\logs.txt
 attrib +H +S %0\..\namegrabber\logs.txt
-echo This is to show that is is an OEM version > %0\..\namegrabber\OEM
-attrib +H +S %0\..\namegrabber\OEM
+echo This is to show that is is an Preinstalled version > %0\..\namegrabber\Preinstalled
+attrib +H +S %0\..\namegrabber\Preinstalled
 cls
 echo done
 pause

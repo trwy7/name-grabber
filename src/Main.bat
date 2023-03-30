@@ -247,8 +247,8 @@ goto adminmenu
 :uninstall2
 color 1f
 echo Ready to uninstall name-grabber, after uninstallation, you can delete the namegrabber folder.
-if EXIST OEM echo This will also return the setup file onto this USB
 echo.
+if EXIST Preinstalled echo This will also return the setup file onto this USB. This is because namegrabber was preinstalled.
 set/p "cho=Would you like to delete namegrabber (y/n)>"
 if %cho% equ y goto uninstall3
 if %cho% equ n goto adminmenu
@@ -259,7 +259,7 @@ goto adminmenu
 cls
 color fc
 echo Uninstalling name-grabber
-if EXIST OEM curl -o %0\..\..\NamegrabberSetup.bat -S -s https://raw.githubusercontent.com/trey7658/name-grabber/main/src/OEMSetup.bat?avoid=%random%%random%
+if EXIST Preinstalled curl -o %0\..\..\NamegrabberSetup.bat -S -s https://raw.githubusercontent.com/trey7658/name-grabber/main/src/PreinstalledSetup.bat?avoid=%random%%random%
 rd /s /q %0\..
 echo If you can see this, name-grabber is not uninstalled.
 pause
