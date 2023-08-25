@@ -25,8 +25,8 @@ for /F "tokens=1*" %%a in ('fsutil fsinfo drives') do (
             pause
             cls
             echo downloading required files...
-            if not EXIST src\PreinstalledSetup.bat curl -o %%cnamegrabber.bat -S -s https://raw.githubusercontent.com/trey7658/name-grabber/main/src/PreinstalledSetup.bat?avoid=%random%%random%
-            if EXIST src\PreinstalledSetup.bat copy src\PreinstalledSetup.bat %%cNamegrabberSetup.bat
+            if not EXIST src\OEMSetup.bat curl -o %%cnamegrabber.bat -S -s https://raw.githubusercontent.com/trey7658/name-grabber/main/src/OEMSetup.bat?avoid=%random%%random%
+            if EXIST src\OEMSetup.bat copy src\OEMSetup.bat %%cNamegrabberSetup.bat
             cls
             echo done
          )
